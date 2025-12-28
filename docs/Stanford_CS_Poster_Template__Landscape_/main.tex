@@ -1,0 +1,306 @@
+% IF YOU ARE USING OVERLEAF, MAKE SURE TO SET THE COMPILER TO XeLatex (Menu in the top left > Settings > Compiler).
+% Gemini theme
+% See: https://rev.cs.uchicago.edu/k4rtik/gemini-uccs
+% A fork of https://github.com/anishathalye/gemini
+
+\documentclass[final]{beamer}
+
+% ====================
+% Packages
+% ====================
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+%\usepackage[size=custom,width=120,height=72,scale=1.0]{beamerposter}
+\usepackage[size=custom,width=91.44,height=60.96,scale=0.83]{beamerposter}
+\usetheme{gemini}
+\usecolortheme{stanford}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,positioning,calc,fit}
+\usepackage{pgfplots}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\pgfplotsset{compat=1.17}
+\usepackage{siunitx}
+
+% ====================
+% Lengths
+% ====================
+
+% If you have N columns, choose \sepwidth and \colwidth such that
+% (N+1)*\sepwidth + N*\colwidth = \paperwidth
+\newlength{\sepwidth}
+\newlength{\colwidth}
+\setlength{\sepwidth}{0.01\paperwidth}
+\setlength{\colwidth}{0.32\paperwidth}
+
+\newcommand{\separatorcolumn}{\begin{column}{\sepwidth}\end{column}}
+
+
+\title{Active Characterization of Non-Cooperative Resident Space Objects Using RL}
+
+
+\author{Rahul Ayanampudi \inst{1} \and Sebastian Martinez \inst{1}}
+
+\institute[shortinst]{ \inst{1} Department of Aeronautics \& Astronautics, Stanford University}
+
+% ====================
+% Footer (optional)
+% ====================
+
+\footercontent{
+  \href{mailto:rayanam@stanford.edu}{rayanam@stanford.edu} \hfill
+  Stanford CS229: Machine Learning \hfill
+  \href{mailto:sebasmp@stanford.edu}{sebasmp@stanford.edu}}
+% (can be left out to remove footer)
+
+% ====================
+% Logo (optional)
+% ====================
+
+% use this to include logos on the left and/or right side of the header:
+% \logoright{\includegraphics[height=7cm]{logos/cs-logo-maroon.png}}
+% \logoleft{\includegraphics[height=7cm]{logos/cs-logo-maroon.png}}
+
+% ====================
+% Body
+% ====================
+
+\begin{document}
+
+% This adds the Logos on the top left and top right
+\addtobeamertemplate{headline}{}
+{
+    \begin{tikzpicture}[remember picture,overlay]
+    %   \node [anchor=north west, inner sep=3cm] at ([xshift=0.0cm,yshift=1.0cm]current page.north west)
+    %   {\includegraphics[height=5.0cm]{stanford_logos/Stanford-CS.png}}; % uc-logo-white.eps
+      \node [anchor=north east, inner sep=3cm] at ([xshift=1.0cm,yshift=2.5cm]current page.north east)
+      {\includegraphics[height=6.0cm]{stanford_logos/Block_S_2_color.png}};
+    \end{tikzpicture}
+}
+
+\begin{frame}[t]
+\begin{columns}[t]
+\separatorcolumn
+
+\begin{column}{\colwidth}
+
+  \begin{block}{Project Overview}
+    Autonomous spacecraft operations for in-orbit servicing and active debris removal critically depend on characterizing non-cooperative Resident Space Objects (RSOs) before proximity operations. Traditional passive observers suffer from range ambiguities and slow convergence rates due to insufficient viewing angle diversity. We address RSO 3D shape reconstruction as a POMDP where a servicer spacecraft must autonomously plan maneuvers to reduce uncertainty in its belief state of the target while minimizing fuel expenditure—balancing exploration and exploitation between aggressive maneuvers that provide diverse viewpoints and conservative strategies that may limit the agent to information-poor trajectories.
+    
+    %—balancing exploration-exploitation where aggressive maneuvering provides diverse viewpoints but consumes fuel, while conservative strategies may trap the agent in information-poor trajectories.
+
+    We leverage an \textbf{AlphaZero-Inspired reinforcement learning framework} \cite{silver2018alphazero} that learns to plan fuel-optimal maneuvers through iterative self-play. \textbf{Inputs:} Probabilistic voxel grid encoding RSO shape belief + Relative Orbital Elements (ROE) for orbital state. \textbf{Outputs:} Policy $\pi_\theta(a|s)$ predicting action probabilities over 13 discrete maneuvers, and value function $V_\theta(s)$ estimating expected return. The learned policy guides tree search, replacing expensive random rollouts with fast neural network predictions. \textbf{Baselines:} We compare against (1) \textbf{Passive observation} (no maneuvers), and (2) \textbf{Standard MCTS} with UCB1 exploration and random rollouts. AlphaZero achieves superior fuel efficiency by learning from self-play which maneuvers maximize information gain.
+
+    %%\heading{Technical Contributions}
+
+    %%\begin{itemize}
+    %  \item Custom GPU-accelerated orbital simulator with CUDA ray tracing for belief updates (5-10$\times$ speedup)
+    %  \item Dual-stream neural architecture fusing spatial (CNN) and physical (FC) state representations
+    %  \item PUCT-guided MCTS replacing uniform exploration with learned priors
+    %  \item Self-play training infrastructure with experience replay and policy distillation
+    %\end{itemize}
+
+    %\heading{Key Results}
+
+    %AlphaZero achieves \textcolor{red}{\textbf{97.1\% belief entropy reduction}} with only \textcolor{red}{\textbf{0.11 m/s total $\Delta v$}} and \textcolor{red}{\textbf{3 maneuvers}}, representing \textbf{65\% fuel savings} and \textbf{57\% fewer maneuvers} compared to pure MCTS (96.77\% reduction, 0.31 m/s, 9 maneuvers). Both methods significantly outperform passive baseline (95.90\%, 0 m/s, 0 maneuvers), demonstrating the value of active information gathering for shape characterization.
+
+  \end{block}
+  \vspace{-25pt}
+  \begin{block}{POMDP Formulation}
+    %\textbf{State}: observable ROE ($\delta a, \delta \lambda, \delta e_x, \delta e_y, \delta i_x, \delta i_y$) describing servicer position/velocity relative to target in RTN frame and hidden belief state—agent's probabilistic voxel grid (20$^3$ cells, 5m$^3$) with occupancy $P_i \in [0,1]$, initially $P_i=0.5$ (max uncertainty).
+    
+    %\textbf{Actions}: 13 discrete impulsive maneuvers (no-burn, $\pm\delta v_{\text{small}}$ [0.01 m/s], $\pm\delta v_{\text{large}}$ [0.05 m/s] along R, T, N axes).
+    
+    %\textbf{Observations}: Camera (10$^\circ$ FOV, 64$\times$64) with Gaussian noise, with the voxels updated via Bayesian inference.
+    
+    %\textbf{Reward}: $R = \text{InfoGain} - \lambda ||\Delta v||$, where InfoGain $= \Delta H/H_{\text{initial}}$, and $H(b)=-\sum_i[P_i \log_2 P_i + (1-P_i) \log_2 (1-P_i)]$ is the Shannon entropy.
+
+    \textbf{State} Observable ROE ($\delta a, \delta \lambda, \delta e_x, \delta e_y, \delta i_x, \delta i_y$) describing servicer orbit relative to target in RTN frame, plus hidden true RSO 3D shape (unknown, static). Agent maintains belief state $b$ as probabilistic voxel grid (20$^3$ cells, 5m$^3$) with occupancy $P_i \in [0,1]$, initially $P_i=0.5$ (max uncertainty).
+
+    \textbf{Actions} 13 discrete maneuvers: no-burn, $\pm\delta v_{\text{small}}$ [\SI{0.01}{\frac{\meter}{\second}}], $\pm\delta v_{\text{large}}$ [\SI{0.05}{\frac{\meter}{\second}}] along RTN axes.
+
+    \textbf{Transition} Deterministic orbital mechanics (propagate ROE given $\Delta v$); RSO shape remains static.
+
+    \textbf{Observations} Camera (10$^\circ$ FOV, 64$\times$64) detects visible voxels via ray-casting with sensor noise. %with 95% true positive rate and 0.1% false positive rate
+    %captures range measurements to visible voxels with sensor noise.
+        
+    \textbf{Belief Update} Bayesian log-odds update for each voxel based on detection results.
+
+    \textbf{Reward} $R = \Delta H/H_{\text{initial}} - \lambda ||\Delta v||$, where  $H(b)=-\sum_i[P_i \log_2 P_i + (1-P_i) \log_2 (1-P_i)]$.
+
+
+    %\heading{ROE Components}
+    %\vspace{-0.2cm}
+    %\begin{itemize}
+    %  \item $\delta a$: Semi-major axis difference (along-track separation drift)
+    %  \item $\delta \lambda$: Mean longitude difference (relative phase angle)
+    %  \item $\delta e_x, \delta e_y$: Eccentricity vector differences (in-plane shape)
+    %  \item $\delta i_x, \delta i_y$: Inclination vector differences (out-of-plane motion)
+    %\end{itemize}
+
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.4\linewidth]{figures/voxel.png}
+        \caption{Probabilistic Voxel Belief Grid}
+        \label{fig:voxel}
+    \end{figure}
+
+  \end{block}
+  
+  \vspace{-30pt}
+  \begin{block}{Methods}
+
+    \heading{1. Standard MCTS}
+    Monte Carlo Tree Search \cite{DBLP:journals/corr/abs-2012-11045} builds a decision tree iteratively where nodes represent belief states and edges represent actions. Each iteration executes four phases (Selection, Expansion, Simulation, Backpropagation) using UCB1 exploration:
+    $$\text{UCB1} = Q(s,a) + c\sqrt{\frac{\ln N(s)}{N(s,a)}}$$
+    where $c$ controls exploration-exploitation balance. Then select $a^* = \arg\max_i \text{UCB1}(s,a_i)$ %after 1000 iterations,
+
+    \end{block}
+\end{column}
+
+\separatorcolumn
+
+\begin{column}{\colwidth}
+    \vspace{30pt}
+    %\heading{MCTS Hyperparameter Tuning}
+    %Swept over $c \in \{1.4, 3.0\}$, $h \in \{10, 15, 20\}$, $\gamma \in \{0.99\}$, $\lambda \in \{0.01, 0.1, 0.5, 1.0\}$
+
+    %\begin{table}
+    %  \centering
+    %  \footnotesize
+    %  \begin{tabular}{ccccccc}
+    %    \toprule
+    %    \textbf{c} & \textbf{h} & $\boldsymbol{\gamma}$ & $\boldsymbol{\lambda}$ & \textbf{Iters} & \textbf{Ent.\%} %& \textbf{$\Delta v$} \\
+    %    \midrule
+    %    \textbf{1.4} & \textbf{15} & \textbf{0.99} & \textbf{1.0} & \textbf{1000} & \textbf{96.77} & \textbf{0.31} \\
+    %    1.4 & 20 & 0.99 & 0.01 & 500 & 96.60 & 0.75 \\
+    %    1.4 & 20 & 0.99 & 0.1 & 500 & 96.58 & 0.79 \\
+    %%    3.0 & 10 & 0.99 & 0.5 & 1000 & 96.37 & 1.10 \\
+     %   3.0 & 10 & 0.99 & 1.0 & 1000 & 94.96 & 1.17 \\
+    %   \bottomrule
+    %  \end{tabular}
+    %\end{table}
+
+   % After performing sweeps of parameters, we found that $c=1.4$ achieves superior balance vs $c=3.0$, which over-explores and wastes fuel. Fuel penalty $\lambda=1.0$ critical for efficiency; $\lambda<0.1$ results in 2-3$\times$ higher $\Delta v$ for marginal entropy gains.
+    
+   \heading{2. AlphaZero-Inspired Framework}
+
+    \begin{figure}
+      \centering
+      \includegraphics[width=0.9\linewidth]{figures/tikz_figure.pdf}
+      %\caption{AlphaZero-Inspired Architecture}
+      \caption{Dual-Stream Architecture: 3D CNN Processes Voxel Grid, FC Layers Encode ROE State, Shared Trunk Outputs Policy and Value Heads}
+    %Dual-stream architecture: 3D CNN processes voxel grid (20$^3$), FC layers encode ROE state (6D), shared backbone outputs policy $\pi_\theta(a|s)$ (13 actions) and value $V_\theta(s) \in [-1,1]$. Total: $\sim$1.1M parameters.
+    \end{figure}
+
+    The network processes spatial (voxel grid via 3D CNN) and physical (ROE via FC layers) state, then outputs two heads: (1) \textbf{Policy head} produces probability distribution $\boldsymbol{\pi}_\theta(s)$ over 13 maneuvers, (2) \textbf{Value head} $V_\theta(s)$ estimates expected discounted return from state $s$.
+
+    The two heads replace UCB1's uniform exploration with learned guidance via the PUCT formula \cite{silver2017mastering}:
+    $$\text{PUCT} = Q(s,a) + c_{\text{puct}} \cdot \pi_\theta(a|s) \cdot \frac{\sqrt{N(s)}}{1+N(s,a)}$$
+    The policy prior $\pi_\theta(a|s)$ biases search toward promising actions early, while the value head $V_\theta$ replaces expensive random rollouts at leaf nodes. This reduces required MCTS iterations.
+
+    \heading{Training Loop}
+
+    \textbf{Self-Play Generation:} 
+    
+    The agent plays episodes using PUCT-MCTS guided by the current network. At each timestep, MCTS builds a search tree. After the search completes, an action is selected from the improved policy $\pi_{\text{MCTS}}(a|s) = N(s,a)/N(s)$ (visit count distribution). The return tuple $(s_t, \boldsymbol{\pi}_{\text{MCTS}}(s_t), z_t)$ is stored in the replay buffer.
+
+    \textbf{Network Update:} 
+    
+    Batches are sampled from the replay buffer and loss is minimized according to $$L = (z - V_\theta(s))^2 - \boldsymbol{\pi}_\text{MCTS}(s) \cdot \log(\boldsymbol{\pi}_\theta(s)) + c||\theta||^2.$$ The value loss trains $V_\theta$ to predict returns and policy loss trains $\boldsymbol{\pi}_\theta$ to match the improved MCTS policy. The self-play training loop is iterated until convergence.
+
+    %\textbf{Key Adaptations:} Multi-modal input fusion (spatial+physical), continuous voxel probabilities vs discrete board states, 1.1M parameters (10-100$\times$ smaller than AlphaGo).
+
+    %\heading{GPU Optimization}
+
+    %\begin{itemize}
+    %  \item CUDA ray tracing kernel: 5-10$\times$ faster belief updates vs CPU
+    %  \item PyTorch GPU tensors for voxel grid operations
+    %  \item \textcolor{red}{\textbf{Training convergence: 2.9$\times$ improvement per epoch vs CPU baseline}}
+    %  \item GPU (54 episodes, loss 2.44) >> CPU (130 episodes, loss 2.54)
+    %\end{itemize}
+  \begin{block}{Results}
+
+    As seen in Table \ref{tab:performance}, AlphaZero-MCTS achieves 97.1\% entropy reduction with \SI{0.11}{\frac{\meter}{\second}} fuel and 3 maneuvers, compared to standard MCTS (96.77\%, \SI{0.31}{\frac{\meter}{\second}}, 9 maneuvers) and passive baseline (95.90\%, \SI{0}{\frac{\meter}{\second}}, 0 maneuvers). AlphaZero uses 65\% less fuel and 57\% fewer maneuvers than standard MCTS while achieving 0.33\% higher information gain. The learned policy executes a targeted 3-burn sequence rather than MCTS's exploratory 9-burn approach, demonstrating that the value network $V_\theta(s)$ successfully identifies high-information maneuvers without expensive random rollouts.
+
+    AlphaZero also reduces MCTS computational cost by 10$\times$ (100 vs 1000 iterations per action) while improving fuel efficiency, validating that self-play training distilled strategic planning into the neural network for real-time autonomous decision-making.
+    
+  \end{block}
+\end{column}
+
+\separatorcolumn
+
+\begin{column}{\colwidth}
+
+    \begin{table}
+      \centering
+      \caption{Methods Performance Comparison}
+      \label{tab:performance}
+      \small
+      \begin{tabular}{lccc}
+        \toprule
+        \textbf{Method} & \textbf{Ent. Red.} & \textbf{$\Delta v$} & \textbf{Maneuvers}\\
+        & \textbf{(\%)} & \textbf{(m/s)} & \\
+        \midrule
+        Passive & 95.90 & 0.00 & 0 \\
+        Standard MCTS & 96.77 & 0.31 & 9 \\
+        AlphaZero-MCTS & \textbf{97.1} & \textbf{0.11} & \textbf{3} \\
+        \bottomrule
+      \end{tabular}
+    \end{table}
+
+    \heading{Trajectory Comparisons}
+
+    \begin{figure}
+      \centering
+      \includegraphics[width=0.48\linewidth]{figures/baseline_final_frame.png}
+      \hfill
+      \includegraphics[width=0.48\linewidth]{figures/alphazero_mcts_orbit.png}
+      \caption{Left: Passive Baseline. Right: AlphaZero-MCTS Trajectory.}
+    \end{figure}
+
+    %\heading{AlphaZero Training Progression}
+
+    %\begin{figure}
+    %  \centering
+    %  \includegraphics[width=0.48\linewidth]{figures/policy_loss.png}
+    %  \hfill
+    %  \includegraphics[width=0.48\linewidth]{figures/value_loss.png}
+    %  \caption{Left: Policy loss converges to MCTS policies (2.57 $\to$ 2.40). Right: Value loss improves return prediction (0.028 $\to$ 0.016). Spikes at episode boundaries due to new data distribution, recovers within 5-10 epochs.}
+    %\end{figure}
+
+  \begin{block}{Discussion \& Future Research}
+
+    The AlphaZero-inspired MCTS approach has proven to be a powerful tool for active characterization of non-cooperative RSOs. Through self-play training, the agent successfully learns to generate orbital trajectories, exploiting relative orbital dynamics to maximize information gain while minimizing propellant consumption. With further refinements in training scale, simulation fidelity, and safety validation, this framework will pave the way to providing capabilities that far surpass current systems.
+
+    \heading{Future Work}
+
+    \textbf{Extended Training:} Generate large-scale self-play datasets to further improve policy and value network accuracy, enabling complete replacement of runtime MCTS rollouts.
+
+    \textbf{Higher Fidelity Simulation:} Introduce realistic GNC errors, solar lighting conditions, and occlusion dynamics to challenge vision system robustness and validate sim-to-real transfer.
+
+    \textbf{Safety Validation:} Implement reachability analysis to verify collision avoidance prior to burn execution for industry-ready deployment.
+
+  \end{block}
+
+    \vspace{-25pt}
+  \begin{block}{References}
+    \vspace{-12pt}
+    \nocite{*}
+    \footnotesize{
+      \bibliographystyle{IEEEtran}
+      \setlength{\bibsep}{0pt}
+      \bibliography{poster}
+    }
+  \end{block}
+
+\end{column}
+
+\separatorcolumn
+\end{columns}
+\end{frame}
+
+\end{document}

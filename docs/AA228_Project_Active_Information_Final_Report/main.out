@@ -1,0 +1,13 @@
+\BOOKMARK [1][-]{section.1}{Introduction}{}% 1
+\BOOKMARK [1][-]{section.2}{Related Work}{}% 2
+\BOOKMARK [1][-]{section.3}{Dataset and Simulation Environment}{}% 3
+\BOOKMARK [1][-]{section.4}{Methods}{}% 4
+\BOOKMARK [2][-]{subsection.4.1}{Monte Carlo Tree Search \(MCTS\)}{section.4}% 5
+\BOOKMARK [2][-]{subsection.4.2}{Reinforcement Learning Framework}{section.4}% 6
+\BOOKMARK [1][-]{section.5}{Experiments and Results}{}% 7
+\BOOKMARK [2][-]{subsubsection.5.0.1}{MCTS Hyperparameter Tuning}{section.5}% 8
+\BOOKMARK [2][-]{subsection.5.1}{AlphaZero MCTS Planner}{section.5}% 9
+\BOOKMARK [3][-]{subsubsection.5.1.1}{Simulation Parameters and Neural Network Hyperparameter Tuning}{subsection.5.1}% 10
+\BOOKMARK [3][-]{subsubsection.5.1.2}{AlphaZero MCTS Performance}{subsection.5.1}% 11
+\BOOKMARK [1][-]{section.6}{Conclusion and Future Work}{}% 12
+\BOOKMARK [1][-]{section.7}{Contributions}{}% 13

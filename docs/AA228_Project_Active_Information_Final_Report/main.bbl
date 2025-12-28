@@ -1,0 +1,66 @@
+\begin{thebibliography}{8}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Amanatides and Woo(1987)]{amanatides1987fast}
+John Amanatides and Andrew Woo.
+\newblock A fast voxel traversal algorithm for ray tracing.
+\newblock \emph{Eurographics}, 1987.
+
+\bibitem[Czech et~al.(2020)Czech, Korus, and
+  Kersting]{DBLP:journals/corr/abs-2012-11045}
+Johannes Czech, Patrick Korus, and Kristian Kersting.
+\newblock Monte-carlo graph search for alphazero.
+\newblock \emph{CoRR}, abs/2012.11045, 2020.
+\newblock URL \url{https://arxiv.org/abs/2012.11045}.
+
+\bibitem[Kocsis and Szepesv{\'a}ri(2006)]{kocsis2006bandit}
+Levente Kocsis and Csaba Szepesv{\'a}ri.
+\newblock Bandit based monte-carlo planning.
+\newblock In \emph{European conference on machine learning}, pages 282--293.
+  Springer, 2006.
+
+\bibitem[Kruger and D'Amico(2025)]{kruger2025autonomous}
+Justin Kruger and Simone D'Amico.
+\newblock Autonomous navigation of a satellite swarm using inter-satellite
+  bearing angles.
+\newblock \emph{IEEE Transactions on Aerospace and Electronic Systems}, 2025.
+
+\bibitem[Kruger et~al.(2024)Kruger, Guffanti, Park, Murray-Cooper, Low, Bell,
+  D'Amico, Roscoe, and Westphal]{kruger2024adaptive}
+Justin Kruger, Tommaso Guffanti, Tae~Ha Park, Mason Murray-Cooper, Samuel Low,
+  Toby Bell, Simone D'Amico, Christopher Roscoe, and Jason Westphal.
+\newblock Adaptive end-to-end architecture for autonomous spacecraft navigation
+  and control during rendezvous and proximity operations.
+\newblock In \emph{AIAA SCITECH 2024 Forum}, 2024.
+\newblock \doi{10.2514/6.2024-0001}.
+
+\bibitem[Silver et~al.(2017)Silver, Hubert, Schrittwieser, Antonoglou, Lai,
+  Guez, Lanctot, Sifre, et~al.]{silver2017mastering}
+David Silver, Thomas Hubert, Julian Schrittwieser, Ioannis Antonoglou, Matthew
+  Lai, Arthur Guez, Marc Lanctot, Laurent Sifre, et~al.
+\newblock Mastering chess and shogi by self-play with a general reinforcement
+  learning algorithm.
+\newblock \emph{arXiv preprint arXiv:1712.01815}, 2017.
+
+\bibitem[Silver et~al.(2018)Silver, Hubert, Schrittwieser, Antonoglou, Lai,
+  Guez, Lanctot, Sifre, Kumaran, Graepel, Lillicrap, Simonyan, and
+  Hassabis]{silver2018alphazero}
+David Silver, Thomas Hubert, Julian Schrittwieser, Ioannis Antonoglou, Matthew
+  Lai, Arthur Guez, Marc Lanctot, Laurent Sifre, Dharshan Kumaran, Thore
+  Graepel, Timothy Lillicrap, Karen Simonyan, and Demis Hassabis.
+\newblock A general reinforcement learning algorithm that masters chess, shogi,
+  and go through self-play.
+\newblock \emph{Science}, 362\penalty0 (6419):\penalty0 1140--1144, 2018.
+\newblock \doi{10.1126/science.aar6404}.
+
+\bibitem[Willis(2023)]{willis2023roe}
+Matthew Willis.
+\newblock Analytical theory of satellite relative motion with applications to
+  autonomous navigation and control, 2023.
+\newblock URL \url{https://purl.stanford.edu/kq677qp2544}.
+
+\end{thebibliography}
